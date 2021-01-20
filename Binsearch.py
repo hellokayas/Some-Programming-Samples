@@ -88,16 +88,16 @@ def matmedian(M,r,c):
 # sub-arrays will be sorted.
 
 def rotarr_search(arr,key):
-	left,right = 0,len(arr)-1
-	while(left <= right):
-		mid = low + (high-low)//2
+	start,end = 0,len(arr)-1
+	while(start <= end):
+		mid = start + (end-start)//2
 		if arr[mid] == key:
 			return mid
 		elif (arr[start] <= key < arr[mid]) or (arr[start] > arr[mid] and not(arr[mid] < key <= arr[end])):#We can easily know which half
 		# is sorted by comparing start and end element of each half.Once we find which half is sorted we can see if the key is present in
 		# that half - simple comparison with the extremes. If the key is present in that half we recursively call the function
 		# on that half else we recursively call our search on the other half.
-			right = mid - 1
+			end = mid - 1
 			# We choose left half if either : 
                 #    * left half is sorted and B in this range
                 #    * left half is not sorted, 
