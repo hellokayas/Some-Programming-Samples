@@ -3,18 +3,20 @@ import sys
 
 # find first and last occurances(two different functions) of a number in a given sorted array using binsearch.
 
-def first(arr,high,low,x):#high is the last elem and low is the first elem in arr
-	while(high >= low):# when this breaks binsearch stops, elem not found
-		mid = low + (high-low)//2
-		if ((mid == 0 or x > arr[mid-1]) and x == arr[mid]):#x == arr[mid] and > arr[mid-1] means first occurence
-			return mid
-		elif x < arr[mid]:
-			return first(arr,mid-1,low,x)# recurse
-		else:
-			return first(arr,high,mid+1,x)# recurse
-	return -1
+def first(arr,high,low,x,result = -1):
+    #result = -1
+    if (high >= low):
+        mid = (high+low)//2
+        if arr[mid] == x:
+            result = mid
+            return first(arr,mid-1,low,x,result)
+        elif arr[mid] > x:
+            return first(arr,mid-1,low,x,result)
+        else:
+            return first(arr,high,mid+1,x,result)
+    return result
 
-def last(arr,high,low,x):# everything same as above
+def last(arr,high,low,x):# everything same as above......................this method is not working
 	n = len(arr)
 	while(high>= low):
 		mid = low + (high-low)//2
