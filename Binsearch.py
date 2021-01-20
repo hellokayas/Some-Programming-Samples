@@ -133,10 +133,10 @@ def findmedian(A,B):
 				return (max(left_x,left_y) + min(right_x,right_y))/2.0
 			else:
 				return max(left_x,left_y)# if the num of elems is odd
-			elif left_x > right_y:# if we have come more towards right of smaller arr, then move left on smaller arr
-				end = partition_x -1
-			else:# if we have come more to the left
-				start = partition_x + 1
+		elif left_x > right_y:# if we have come more towards right of smaller arr, then move left on smaller arr
+			end = partition_x -1
+		else:# if we have come more to the left
+			start = partition_x + 1
 
 #The painter’s partition problem. arr contains different lengths to be painted. P is the num of painters available.
 
