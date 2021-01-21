@@ -18,17 +18,19 @@ def count(arr,key):# this gives the first occurence in an arr sorted in increasi
             left = mid + 1 
     return result
 
-def last(arr,high,low,x):# everything same as above......................this method is not working
-	n = len(arr)
-	while(high>= low):
-		mid = low + (high-low)//2
-		if((mid == n-1 or x < arr[mid+1]) and x == arr[mid]):#x == arr[mid] and < arr[mid+1] means last occurence
-			return mid
-		elif x < arr[mid]:
-			return first(arr,mid-1,low,x)
-		else:
-			return first(arr,high,mid+1,x)
-	return -1
+def count(arr,key):# this gives the last occurence in an arr sorted in increasing order, for an arr sorted decreasing order, we need to write differently
+    n = len(arr)
+    left,right,result = 0,n-1,-1
+    while(left <= right):
+        mid = (left+ right)//2
+        if key == arr[mid]:
+            result = mid
+            left = mid + 1
+        elif key < arr[mid]:
+            right = mid -1
+        else:
+            left = mid + 1 
+    return result
 
 # given int A, return its sqrt. If not perfect sq return floor of sqrt
 
