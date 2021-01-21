@@ -32,6 +32,20 @@ def count(arr,key):# this gives the last occurence in an arr sorted in increasin
             left = mid + 1 
     return result
 
+def count(arr,key):# this returns the first occurence of an elem in arr which is sorted in decreasing order
+    n = len(arr)
+    start,end,result = n-1,0,-1# it is just going in the reverse direction
+    while(start >= end):
+        mid = (start+ end)//2
+        if key == arr[mid]:
+            result = mid
+            start = mid - 1
+        elif key > arr[mid]:# since the arr sorted in decreasing order
+            start = mid -1
+        else:
+            end = mid + 1
+    return result
+
 # given int A, return its sqrt. If not perfect sq return floor of sqrt
 
 def sqrt(A):
