@@ -3,16 +3,20 @@ import sys
 
 # find first and last occurances(two different functions) of a number in a given sorted array using binsearch.
 
-def count(arr,key):
+def count(arr,key):# this gives the first occurence in an arr sorted in increasing order
     n = len(arr)
-    left,right = 0,n-1
-    while(left < right):
-        mid = left + (right-left)//2
-        if arr[mid] > key:
-            left = mid +1
+    left,right,result = 0,n-1,-1
+    while(left <= right):
+        mid = (left+ right)//2
+        #print(left,right,mid,arr[mid])
+        if key == arr[mid]:
+            result = mid
+            right = mid - 1
+        elif key < arr[mid]:
+            right = mid -1
         else:
-            right = mid
-    return right
+            left = mid + 1 
+    return result
 
 def last(arr,high,low,x):# everything same as above......................this method is not working
 	n = len(arr)
