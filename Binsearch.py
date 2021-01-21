@@ -18,6 +18,22 @@ def count(arr,key):# this gives the first occurence in an arr sorted in increasi
             left = mid + 1 
     return result
 
+def searchInsert(nums, target) -> int:# correct index to insert a val in a sorted list
+        # Log(n)
+        l, r = 0, len(nums) - 1
+        
+        while l <= r:
+            mid = (l + r) // 2
+            
+            if target == nums[mid]:
+                return mid
+            
+            if target > nums[mid]:
+                l = mid + 1
+            else:
+                r = mid - 1
+        
+        return l
 def count(arr,key):# this gives the last occurence in an arr sorted in increasing order, for an arr sorted decreasing order, we need to write differently
     n = len(arr)
     left,right,result = 0,n-1,-1
