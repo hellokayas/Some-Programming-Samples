@@ -10,6 +10,22 @@ def knapsack(wt_arr,val_arr,capacity,n):
     else:
         our_arr[n][capacity] =  knapsack(wt_arr,val_arr,capacity,n-1)
         return our_arr[n][capacity]
+    
+#topdown dp
+
+def knapsack(wt_arr,val_arr,capacity,n):
+    our_arr = [[-1 for i in range(capacity+1)] for j in range(n+1)]
+    for i in range(capacity+1):
+        our_arr[0][i] = 0
+    for i in range(n+1):
+        our_arr[i][0] = 0
+    for i in range(1,n+1):
+        for j in range(1,capacity+1):
+            if wt_arr[i-1] <= j:
+                our_arr[i][j] = max(val_arr[i-1] + our_arr[i-1][j-wt_arr[i-1]], our_arr[i-1][j])
+            else: our_arr[i][j] = our_arr[i-1][j]
+            
+    return our_arr[n][capacity]
 
 # test case      
 wts = [2,5,8,6,2]
