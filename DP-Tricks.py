@@ -33,3 +33,25 @@ vals = [6,10,4,0,1]
 capacity = 9
 n = 5
 print(knapsack(wts,vals,capacity,n))
+
+# memoized subset sum from knapsack
+
+# if there is only one arr given think of it as weight arr and capacity the max constraint given
+
+def subsetsum(arr,target):
+    n = len(arr)
+    memo = [[-1 for i in range(target+1)] for j in range(n+1)]
+    if (target == 0 or arr == []): return True
+    if memo[n][target] != -1: return memo[n][target]
+    if arr[n-1] <= target:
+        memo[n][target] = subsetsum(arr[:n-1],target) or subsetsum(arr[:n-1],target-arr[n-1])
+        return memo[n][target]
+    else:
+        memo[n][target] = subsetsum(arr[:n-1],target)
+        return memo[n][target]
+  
+# test case      
+arr = [4,2,7,1,5]
+target = 11
+print(subsetsum(arr,target))
+
