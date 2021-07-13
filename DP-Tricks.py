@@ -55,3 +55,24 @@ arr = [4,2,7,1,5]
 target = 11
 print(subsetsum(arr,target))
 
+# count the number of soln in the subset sum
+
+def countsubsetsum(arr,target):
+    n = len(arr)
+    memo = [[-1 for i in range(target+1)] for j in range(n+1)]
+    for j in range(target+1):
+        memo[0][j] = 0
+    for i in range(n+1):
+        memo[i][0] = 1
+    if memo[n][target] != -1: return memo[n][target]
+    if arr[n-1] <= target:
+        memo[n][target] = countsubsetsum(arr[:n-1],target) + countsubsetsum(arr[:n-1],target-arr[n-1])
+        return memo[n][target]
+    else:
+        memo[n][target] = countsubsetsum(arr[:n-1],target)
+        return memo[n][target]
+  
+# test case      
+arr = [2,3,5,7,8,10]
+target = 10
+print(countsubsetsum(arr,target))
