@@ -34,6 +34,39 @@ capacity = 9
 n = 5
 print(knapsack(wts,vals,capacity,n))
 
+
+# for the minsubsetdiff to work we need the last row of the dp table of the subset sum problem. So that code need to be modified a little bit.
+def subsetsum(arr,target):
+    n = len(arr)
+    memo = [[-1 for j in range(target+1)] for i in range(n+1)]
+    for i in range(target+1):
+        memo[0][i] = False
+    for i in range(n+1):
+        memo[i][0] = True
+    for i in range(1,n+1):
+        for j in range(1,target+1):
+            if arr[i-1] <= j:
+                memo[i][j] = memo[i-1][j] or memo[i-1][j-arr[i-1]]
+            else: memo[i][j] = memo[i-1][j]
+    vec = [memo[n][i] for i in range(target+1)]
+    return vec
+
+arr = [2,4,5,7]
+target = 7
+print(subsetsum(arr,target))
+#[True, False, True, False, True, True, True, True]
+
+# Now use this modified code to write the main function
+def minsumdiff(arr):
+    n = len(arr)
+    req_range = sum(arr)
+    minim = req_range
+    vec = subsetsum(arr,req_range//2 + 1)
+    for i in range(len(vec)):
+        if vec[i] == True:
+            minim = min(minim,req_range-2*i)
+    return abs(minim)
+
 # memoized subset sum from knapsack
 
 # if there is only one arr given think of it as weight arr and capacity the max constraint given
