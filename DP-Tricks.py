@@ -5,7 +5,7 @@ def knapsack(wt_arr,val_arr,capacity,n):
     if (n==0 or capacity == 0): return 0 # base case
     if our_arr[n][capacity] != -1: return our_arr[n][capacity]
     if wt_arr[n-1] <= capacity:
-        our_arr[n][capacity] =  max(val_arr[n-1]+knapsack(wt_arr,val_arr,capacity-wt_arr[n-1],n-1),knapsack(wt_arr,val_arr,capacity,n-1))
+        our_arr[n][capacity] =  max(val_arr[n-1]+knapsack(wt_arr,val_arr,capacity-wt_arr[n-1],n-1),knapsack(wt_arr,val_arr,capacity,n-1))# val_arr[n-1]+knapsack(wt_arr,val_arr,capacity-wt_arr[n-1],n) for unbdd knapsack
         return our_arr[n][capacity]
     else:
         our_arr[n][capacity] =  knapsack(wt_arr,val_arr,capacity,n-1)
@@ -22,7 +22,7 @@ def knapsack(wt_arr,val_arr,capacity,n):
     for i in range(1,n+1):
         for j in range(1,capacity+1):
             if wt_arr[i-1] <= j:
-                our_arr[i][j] = max(val_arr[i-1] + our_arr[i-1][j-wt_arr[i-1]], our_arr[i-1][j])
+                our_arr[i][j] = max(val_arr[i-1] + our_arr[i-1][j-wt_arr[i-1]], our_arr[i-1][j])# val_arr[i-1] + our_arr[i][j-wt_arr[i-1]] for unbdd knapsack
             else: our_arr[i][j] = our_arr[i-1][j]
             
     return our_arr[n][capacity]
