@@ -56,6 +56,7 @@ target = 11
 print(subsetsum(arr,target))
 
 # count the number of soln in the subset sum
+# this probelm can be used to find the num of subsets with a given diff. s1-s2 = diff and s1 + s2 = sum(arr). now add these to eqns and use countsubsetsum(arr,diff+sum(arr) // 2)
 
 def countsubsetsum(arr,target):
     n = len(arr)
