@@ -89,7 +89,7 @@ def subsetsum(arr,target):
     for i in range(1,n+1):
         for j in range(1,target+1):
             if arr[i-1] <= j:
-                memo[i][j] = memo[i-1][j] or memo[i-1][j-arr[i-1]]
+                memo[i][j] = memo[i-1][j] or memo[i-1][j-arr[i-1]]# the second summand will be memo[i][j-arr[i-1]] for unbdd subset sum and val[i-1] to be added if there is a val_arr
             else: memo[i][j] = memo[i-1][j]
     vec = [memo[n][i] for i in range(target+1)]
     return vec
@@ -109,4 +109,16 @@ def minsumdiff(arr):
         if vec[i] == True:
             minim = min(minim,req_range-2*i)
     return abs(minim)
+
+def rodcutting(length_arr,price_arr,rod_len):
+    return unbddknapsack(wt_arr,val_arr,capacity)
+
+def num_of_ways_coinchange(coin_arr,val):
+    return unbddsubsetsum(arr = coin_arr,target = val)
+
+
+
+
+
+
 
