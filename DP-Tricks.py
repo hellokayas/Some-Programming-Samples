@@ -116,7 +116,28 @@ def rodcutting(length_arr,price_arr,rod_len):
 def num_of_ways_coinchange(coin_arr,val):
     return unbddsubsetsum(arr = coin_arr,target = val)
 
+def mincoin(coin_arr,total):# the min number of coins to be used from the coin_arr to make the given total
+    n = len(coin_arr)
+    memo = [[2**30 for j in range(total+1)] for i in range(n+1)]
+    for i in range(n+1):
+        memo[i][0] = 0
+    for i in range(total+1):# this means not possible, mathematically we set this to infinity
+        memo[0][i] = 2**31-1
+    for i in range(1,total+1):# this is the case where we have to initialize the second row too
+        if (i % coin_arr[0] == 0):# if the first num in the arr divides the total, then we can use those many coins
+            memo[1][i] = i // coin_arr[0]
+        else: memo[1][i] = 2**31-1# this means not possible, mathematically we set this to infinity
+    for i in range(n+1):
+        for j in range(total + 1):
+            if coin_arr[i-1] <= j:
+                memo[i][j] = min(1+memo[i][j-coin_arr[i-1]], memo[i-1][j])# the unbddknapsack
+            else: memo[i][j] = memo[i-1][j]
+    return memo[n][total]
 
+# test case
+coin_arr = [1,2,3,4]
+total = 297
+print(mincoin(coin_arr,total))
 
 
 
