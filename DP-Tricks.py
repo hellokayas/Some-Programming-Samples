@@ -139,7 +139,27 @@ coin_arr = [1,2,3,4]
 total = 297
 print(mincoin(coin_arr,total))
 
+def lcs(p,q,m,n):
+    memo = [[0 for i in range(n+1)] for j in range(m+1)]
+    result = 0
+    for i in range(m+1):
+        memo[i][0] = 0
+    for i in range(n+1):
+        memo[0][i] = 0
+    for i in range(m+1):
+        for j in range(n+1):
+            if p[i-1] == q[j-1]:
+                memo[i][j] = 1 + memo[i-1][j-1]
+                result = max(result,memo[i][j])
+            else:
+                memo[i][j] = 0 #max(memo[i-1][j],memo[i][j-1])
+    return result
 
+#test case
+p = "abhtgj"
+q = "abhtokjojkjnv"
+m,n = len(p),len(q)
+print(lcs(p,q,m,n))
 
 
 
