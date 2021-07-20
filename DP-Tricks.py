@@ -161,5 +161,48 @@ q = "abhtokjojkjnv"
 m,n = len(p),len(q)
 print(lcs(p,q,m,n))
 
+# Printing the  LCS now
+
+def printlcs(p,q,m,n):
+    memo = [[0 for i in range(n+1)] for j in range(m+1)]
+    for i in range(1,m+1):
+        for j in range(1,n+1):
+            if p[i-1]==q[j-1]: memo[i][j] = 1 + memo[i-1][j-1]
+            else: memo[i][j] = max(memo[i-1][j],memo[i][j-1])
+    #print(memo)            
+    i,j = m,n
+    string = ""
+    while(i>0 and j>0):
+        if p[i-1] == q[j-1]:
+            string += p[i-1]
+            i -= 1
+            j -= 1
+            
+            #print(string)
+        else:
+            if memo[i-1][j] > memo[i][j-1]:
+                i = i-1
+            else: j = j-1
+    return string[::-1]
+
+#test case
+p = "abhtgjxyuhifluwbhflib"
+q = "abhtokjojkjnvxyuibfulwabfaulwb"
+m,n = len(p),len(q)
+print(printlcs(p,q,m,n))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
