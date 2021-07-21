@@ -191,7 +191,12 @@ q = "abhtokjojkjnvxyuibfulwabfaulwb"
 m,n = len(p),len(q)
 print(printlcs(p,q,m,n))
 
-
+# Minimum Number of Insertion and Deletion to convert String a to String b
+def min_num(a,b):# if replace operation is also allowed, then the problem becomes the famous EDIT DISTANCE problem
+    x,y = len(a),len(b)
+    delete = x - lcs(a,b,x,y)
+    insert = y - lcs(a,b,x,y)
+    return [delete,insert]
 
 
 
