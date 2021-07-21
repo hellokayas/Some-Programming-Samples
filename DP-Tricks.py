@@ -205,7 +205,38 @@ def LPS(a):
 # this will be len(a)-LPS(a)
 
 
+# printing the longest common superseq
 
+def printscs(p,q,m,n):
+    memo = [[0 for i in range(n+1)] for j in range(m+1)]
+    for i in range(1,m+1):
+        for j in range(1,n+1):
+            if p[i-1]==q[j-1]: memo[i][j] = 1 + memo[i-1][j-1]
+            else: memo[i][j] = max(memo[i-1][j],memo[i][j-1])
+    #print(memo)            
+    i,j = m,n
+    string = ""
+    while(i>0 and j>0):
+        if p[i-1] == q[j-1]:
+            string += p[i-1]
+            i -= 1
+            j -= 1
+            # upto this is exactly same as printing lcs
+            #print(string)
+        else:
+            if memo[i-1][j] > memo[i][j-1]:
+                string += p[i-1]# even when we move towards the maximum and the chars do not match we have to include this in the superseq
+                i = i-1
+            else:
+                string += q[j-1]# same as the last comment
+                j = j-1
+        while (i>0):# either of i or j might be still non empty, so include that remaining part of the str in the superseq
+            string += p[i-1]
+            i = i-1
+        while (j>0):# same as thelast comment
+            string += q[j-1]
+            j = j-1
+    return string[::-1]
 
 
 
