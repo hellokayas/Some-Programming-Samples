@@ -146,8 +146,8 @@ def lcs(p,q,m,n):
         memo[i][0] = 0
     for i in range(n+1):
         memo[0][i] = 0
-    for i in range(m+1):
-        for j in range(n+1):
+    for i in range(1,m+1):
+        for j in range(1,n+1):
             if p[i-1] == q[j-1]:
                 memo[i][j] = 1 + memo[i-1][j-1]
                 result = max(result,memo[i][j])
@@ -198,8 +198,9 @@ def min_num(a,b):# if replace operation is also allowed, then the problem become
     insert = y - lcs(a,b,x,y)
     return [delete,insert]
 
-
-
+# Longest Palindromic Subsequence
+def LPS(a):
+    return lcs(a,a[::-1])
 
 
 
