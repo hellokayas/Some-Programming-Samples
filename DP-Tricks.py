@@ -201,7 +201,8 @@ def min_num(a,b):# if replace operation is also allowed, then the problem become
 # Longest Palindromic Subsequence
 def LPS(a):
     return lcs(a,a[::-1])
-
+# Minimum number of deletion in a string a to make it a palindrome
+# this will be len(a)-LPS(a)
 
 
 
