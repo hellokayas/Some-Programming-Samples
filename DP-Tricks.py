@@ -256,8 +256,21 @@ def matching(pattern,seq):
     if m == lcs(pattern,seq,m,n): return True# just checking len is enough, no need to check the exact the subseq as something alse cannot happen
     return False
 
+# matrix chain problem recursive soln without any dp
+def mcm(arr):
+    minim = 2**31-1
+    n = len(arr)
+    i,j = 1,n-1
+    if i >= j: return 0
+    temp = 0
+    for k in range(i,j):
+        temp = arr[i-1]*arr[k]*arr[j] + mcm(arr[i:k+1]) + mcm(arr[k+1:j+1])
+        if temp < minim:
+            minim = temp
+    return minim
 
-
+#arr = [40,20,30,10,30]
+#print(mcm(arr))
 
 
 
