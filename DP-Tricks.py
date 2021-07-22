@@ -139,7 +139,7 @@ coin_arr = [1,2,3,4]
 total = 297
 print(mincoin(coin_arr,total))
 
-def lcs(p,q,m,n):
+def lcsubstr(p,q,m,n):
     memo = [[0 for i in range(n+1)] for j in range(m+1)]
     result = 0
     for i in range(m+1):
@@ -238,7 +238,16 @@ def printscs(p,q,m,n):
             j = j-1
     return string[::-1]
 
-
+# Longest repeating subsequence -- exactly same code as lcs, just i != j when finding lcs of the same string.
+def printlcs(s):
+    p,q,m,n = s,s,len(s),len(s)
+    memo = [[0 for i in range(n+1)] for j in range(m+1)]
+    for i in range(1,m+1):
+        for j in range(1,n+1):
+            if p[i-1]==q[j-1] and i != j: memo[i][j] = 1 + memo[i-1][j-1]
+            else: memo[i][j] = max(memo[i-1][j],memo[i][j-1])
+    
+    return memo[m][n]
 
 
 
