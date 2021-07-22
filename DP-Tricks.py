@@ -249,6 +249,18 @@ def printlcs(s):
     
     return memo[m][n]
 
+# Sequence Pattern Matching
+def matching(pattern,seq):
+    m,n = len(pattern),len(seq)
+    if m == lcs(pattern,seq,m,n): return True# just checking len is enough, no need to check the exact the subseq as something alse cannot happen
+    return False
+
+
+
+
+
+
+
 
 
 
