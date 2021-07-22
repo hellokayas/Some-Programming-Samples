@@ -203,6 +203,7 @@ def LPS(a):
     return lcs(a,a[::-1])
 # Minimum number of deletion in a string a to make it a palindrome
 # this will be len(a)-LPS(a)
+#Minimum number of insertion in a string to make it a palindrome should be same too since we can make palindrome either by del or inserting the same number of elem to make a pair
 
 
 # printing the longest common superseq
