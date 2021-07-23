@@ -269,6 +269,26 @@ def mcm(arr):
             minim = temp
     return minim
 
+# the memoized version is as follows:
+
+def mcm(arr):
+    minim = 2**31-1
+    n = len(arr)
+    memo = [[-1 for i in range(n+1)] for j in range(n+1)]
+    
+    i,j = 1,n-1
+    if i >= j: return 0
+    if memo[i][j] != -1: return memo[i][j]
+    temp = 0
+    for k in range(i,j):
+        
+        temp = arr[i-1]*arr[k]*arr[j] + mcm(arr[i:k+1]) + mcm(arr[k+1:j+1])
+        if temp < minim:
+            minim = temp
+            memo[i][j] = minim
+    return minim
+
+
 #arr = [40,20,30,10,30]
 #print(mcm(arr))
 
