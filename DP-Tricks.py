@@ -313,7 +313,35 @@ def palin_part(arr):
             memo[i][j] = minim
     return minim
 
+# further optimization
 
+def palin_part(arr):
+    minim = 2**31-1
+    n = len(arr)
+    memo = [[-1 for i in range(n+1)] for j in range(n+1)]
+    
+    i,j = 0,n-1
+    if i >= j: return 0
+    if arr == arr[::-1]: return 0
+    if memo[i][j] != -1: return memo[i][j]
+    temp = 0
+    for k in range(i,j):
+        
+        if memo[i][k] != -1:
+            left = memo[i][k]
+        else:
+            left = palin_part(arr[i:k+1])
+            memo[i][k] = left
+        if memo[k+1][j] != -1:
+            right = memo[k+1][j]
+        else:
+            right = palin_part(arr[k+1:j+1])
+            memo[k+1][j] = right
+        temp = 1+left+right# before calculating temp, we check for the subproblems too if the soln is available already, else go on to solve them and then store them in memo
+        if temp < minim:
+            minim = temp
+            memo[i][j] = minim
+    return minim
 
 
 
