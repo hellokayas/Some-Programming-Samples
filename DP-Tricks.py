@@ -343,7 +343,35 @@ def palin_part(arr):
             memo[i][j] = minim
     return minim
 
+# scrambled string problem memoized version
+map = {}# the storage for dp
+def scramble(s1,s2):
+    if len(s1) != len(s2):
+        return False
+    n = len(s1)
+    if not n: return True
+    if s1 == s2: return True
+    if sorted(s1) != sorted(s2): return False# checking anangrams
+    
+    
+    if (s1+" "+s2 in map):# using the already stored solved subproblems
+        return map[s1+" "+s2]
+    flag = False
+    for i in range(1,n):
+        if (scramble(s1[:i],s2[:i])) and (scramble(s1[i:],s2[i:])):
+            flag = True
+            return True
+        if (scramble(s2[:i],s1[-i:])) and (scramble(s2[i:],s1[:-i])):
+            flag = True
+            return True
+            
+    map[s1+" "+s2] = flag# storing the subproblems
+    return False
 
+#test case
+s1 = "great"
+s2 = "rgate"
+print(scramble(s1,s2))
 
 
 
