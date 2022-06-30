@@ -103,6 +103,27 @@ def dfs(grid,i,j):
     return
 
 ```
+
+## Number of Connected Components in an Undirected Graph
+Create the graph given the edges. Then run dfs from one node, this will get the connected comp. The number of times we run dfs = number of conn comp
+```bash
+def dfs(node):
+    if node in visited: return
+    visited.add(node)
+    for nbr in adjList[node]:
+        if nbr not in visited:
+            dfs(nbr)
+visited = set()
+count = 0
+for i in range(n):
+    if i not in visited:
+        dfs(i)
+        count += 1
+return count
+```
+
+
+
 ## There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai. Return true if you can finish all courses. Otherwise, return false.
 
 This is topological sort where the nodes are the courses and the directed edges are from bi to ai. If there is a top ordering then we return true. We remove edges after forming graph starting from  those vertices that have lowest indegree and these are the vertices in the lowest order an so on.
@@ -133,3 +154,72 @@ def f(n,req):
 # res is the list of vertices that are topologically sorted
 ```
 
+## Given the root of a complete binary tree, return the number of the nodes in the tree.
+This is tricky with no general concept. look at https://leetcode.com/problems/count-complete-tree-nodes/
+
+## Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.
+Just do inorder traversal and return the k-1 th elem from that list. But there is a followup: What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+That's a design question, basically we're asked to implement a structure which contains a BST inside and optimises the following operations :
+Insert,Delete,Find kth smallest
+Seems like a database description, isn't it? Let's use here the same logic as for LRU cache design, and combine an indexing structure (we could keep BST here) with a double linked list.
+
+## Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
+We need to find tehe parents of all the nodes and then find the ancestral path from the two given nodes till the root. Then reverse the paths so they match from the start and then find the spot from where they first branch. This will be the LCS.
+```bash
+hashtable = {}
+def dfs(node,parent):
+    if not node: return
+    hashtable[node] = parent
+    dfs(node.left,node)
+    dfs(node.right,node)
+
+dfs(root,None) # now all the parents are known
+p_ancestors = []
+while p:
+    p_ancestors.append(p)
+    p = hashtable[p]
+# do similarly for the other node q
+pParent = p_ancestors[::-1]
+# do same for q's list
+for np,nq in zip(pParent,qParent):
+    if np == nq: lca = np
+return lca
+```
+
+## Given a graph with n nodes labeled 0 to n-1, and edges[i] = [ai,bi]. Say if this graph is a tree or not
+
+Given the list of edges, we can create the graph in three ways, whichever comes handy whenever.
+```bash
+G = defaultdict(list)
+for u,v in edges:
+    G[u].append(v)
+    G[v].append(u)
+
+# OR we can do 
+
+adj_list = [[] for _ in range(n)]
+for A, B in edges:
+    adj_list[A].append(B)
+    adj_list[B].append(A)
+
+# OR we can do
+
+adjList = {i:[] for i in range(n)}
+for edge in edges:
+    A, B = edge
+    adjList[A].append(B)
+    adjList[B].append(A)
+```
+Now just check if there is a cycle or not, then immediately return False. Else now check if after running a dfs we have appended all the n nodes in the visited set.
+```bash
+def detect_cycle(node, visited, parent):
+    visited.add(node)
+    for child in G[node]:
+        if(child == parent): continue
+        if(child in visited or detect_cycle(child, visited, node)):   # Current node is now parent
+                return True
+    return False
+
+if detect_cycle(0, visited, -1): return False
+return len(visited) == n
+```
