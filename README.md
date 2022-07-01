@@ -223,3 +223,120 @@ def detect_cycle(node, visited, parent):
 if detect_cycle(0, visited, -1): return False
 return len(visited) == n
 ```
+# find leaves of binary tree
+extremely tricky dfs
+```bash
+def f(root):
+    def helper(root):
+        if not root: return 0
+        left = helper(root.left)
+        right = helper(root.right)
+        level = max(left,right) + 1
+        d[level].append(root.val)
+        return level
+    d = collections.defaultdict(list)
+    helper(root)
+    return list(d.values())
+```
+Insertion and deletion from Binary search tree should be practiced: https://www.techiedelight.com/deletion-from-bst/
+
+# finding a path in maze using dfs
+```bash
+def dfs(i, j):
+    if [i, j] == destination: return True
+    for dx, dy in ((0,-1),(0,1),(-1,0),(1,0)): # the directions
+        x, y = i, j
+        while 0 <= x+dx < m and 0 <= y+dy < n and not maze[x+dx][y+dy]:
+            x, y = x+dx, y+dy # this is a special case where we do not stop for every nbr but go on along the nbrs i.e. proceed in one of the directions as long as we can
+        if (x,y) not in seen: 
+            seen.add((x,y))
+            if dfs(x,y): return True # if reached destination, then the True comes out from within the loop
+    return False
+```
+# inorder successor. Should we look at the other order successors and predecessors??
+There are two possible situations here : Node has a right child, and hence its successor is somewhere lower in the tree. To find the successor, go to the right once and then as many times to the left as you could.
+if node.right:
+    curr = node.right
+    while curr.left:
+        curr = curr.left
+    return curr
+Node has no right child, then its successor is somewhere upper in the tree. To find the successor, go up till the node that is left child of its parent. The answer is the parent. Beware that there could be no successor (= null successor) in such a situation
+while node.parent and node == node.parent.right:
+    node = node.parent
+return node.parent
+
+# Given the root of a binary tree, return the maximum width of the given tree.
+Since we are checking level by level, very similar to level order traversal, while appending to queue, also append the columkn number, the colnumber - the head of the level is the curr width, we update the max width at each stage
+```bash
+max_width = 0
+# queue of elements [(node, col_index)]
+queue = deque()
+queue.append((root, 0))
+
+while queue:
+    level_length = len(queue)
+    _, level_head_index = queue[0]
+    # iterate through the current level
+    for _ in range(level_length):
+        node, col_index = queue.popleft()
+        # preparing for the next level
+        if node.left:
+            queue.append((node.left, 2 * col_index))
+        if node.right:
+            queue.append((node.right, 2 * col_index + 1))
+
+    # calculate the length of the current level,
+    #   by comparing the first and last col_index.
+    max_width = max(max_width, col_index - level_head_index + 1)
+```
+# The area of an island is the number of cells with a value 1 in the island. Return the maximum area of an island in grid. If there is no island, return 0. You are given an m x n binary matrix grid. An island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.
+
+Define DFS on a cell and this will find the connected component, while finding the component add up the  total area while doing dfs. Then just return max of running dfs from all the cells
+```bash
+seen = set()
+def dfs(r,c):
+    #seen = set()
+    if not (0 <= r < len(grid) and 0 <= c < len(grid[0]) and grid[r][c] == 1 and (r,c) not in seen): return 0
+    seen.add((r,c))
+    return (dfs(r,c+1) + dfs(r,c-1) + dfs(r-1,c) + dfs(r+1,c) + 1)
+```
+# one of the hardest problems, will come back later: https://leetcode.com/problems/number-of-distinct-islands/
+
+# check if a graph is bipartite given the adjacency list of each node,  where graph[u] is an array of nodes that node u is adjacent to.
+Keep a dict called color where nodes are keys and the colors are the numbers 0 or 1. We will always try to given different colors to nbrs through dfs and if we see that there is a loop, G is not bipartite
+```bash
+color = {}
+for node in range(len(G)):
+    if node not in color:
+        color[node] = 0
+        stack = [node]
+        while stack:
+            node = stack.pop()
+            for nbr in G[node]:
+                if nbr not in color:
+                    stack.append(nbr)
+                    color[nbr] = color[node]^1
+                elif color[node] == color[nbr]: return False
+return True
+```
+# find all possible paths from one node to another in a DAG. Vertices are number 0 to n-1. we are searching 0 -> n-1 all paths
+define dfs on a node that goes through all paths and then just call dfs(0)
+```bash
+def dfs(v):
+    if v == n-1: yield [v]
+    yield from ([v] + ls for u in graph[v] for ls in dfs(u))
+```
+# all possible full binary tree == Catalan number
+
+# Binary tree pruning: Given the root of a binary tree, return the same tree where every subtree (of the given tree) not containing a 1 has been removed. A subtree of a node node is node plus every node that is a descendant of node.
+```bash
+left = self.pruneTree(root.left)
+root.left = left
+right = self.pruneTree(root.right)
+root.right = right
+if (root.val == 0 and root.left == None and root.right == None): return None
+return root
+```
+
+# UNION FIND : https://leetcode.com/problems/possible-bipartition/ 
+The structure is coded here in this example. We will use it in other problems too
