@@ -223,7 +223,7 @@ def detect_cycle(node, visited, parent):
 if detect_cycle(0, visited, -1): return False
 return len(visited) == n
 ```
-# find leaves of binary tree
+## find leaves of binary tree
 extremely tricky dfs
 ```bash
 def f(root):
@@ -240,7 +240,7 @@ def f(root):
 ```
 Insertion and deletion from Binary search tree should be practiced: https://www.techiedelight.com/deletion-from-bst/
 
-# finding a path in maze using dfs
+## finding a path in maze using dfs
 ```bash
 def dfs(i, j):
     if [i, j] == destination: return True
@@ -253,7 +253,7 @@ def dfs(i, j):
             if dfs(x,y): return True # if reached destination, then the True comes out from within the loop
     return False
 ```
-# inorder successor. Should we look at the other order successors and predecessors??
+## inorder successor. Should we look at the other order successors and predecessors??
 There are two possible situations here : Node has a right child, and hence its successor is somewhere lower in the tree. To find the successor, go to the right once and then as many times to the left as you could.
 if node.right:
     curr = node.right
@@ -265,7 +265,7 @@ while node.parent and node == node.parent.right:
     node = node.parent
 return node.parent
 
-# Given the root of a binary tree, return the maximum width of the given tree.
+## Given the root of a binary tree, return the maximum width of the given tree.
 Since we are checking level by level, very similar to level order traversal, while appending to queue, also append the columkn number, the colnumber - the head of the level is the curr width, we update the max width at each stage
 ```bash
 max_width = 0
@@ -289,7 +289,7 @@ while queue:
     #   by comparing the first and last col_index.
     max_width = max(max_width, col_index - level_head_index + 1)
 ```
-# The area of an island is the number of cells with a value 1 in the island. Return the maximum area of an island in grid. If there is no island, return 0. You are given an m x n binary matrix grid. An island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.
+## The area of an island is the number of cells with a value 1 in the island. Return the maximum area of an island in grid. If there is no island, return 0. You are given an m x n binary matrix grid. An island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.
 
 Define DFS on a cell and this will find the connected component, while finding the component add up the  total area while doing dfs. Then just return max of running dfs from all the cells
 ```bash
@@ -300,9 +300,9 @@ def dfs(r,c):
     seen.add((r,c))
     return (dfs(r,c+1) + dfs(r,c-1) + dfs(r-1,c) + dfs(r+1,c) + 1)
 ```
-# one of the hardest problems, will come back later: https://leetcode.com/problems/number-of-distinct-islands/
+## one of the hardest problems, will come back later: https://leetcode.com/problems/number-of-distinct-islands/
 
-# check if a graph is bipartite given the adjacency list of each node,  where graph[u] is an array of nodes that node u is adjacent to.
+## check if a graph is bipartite given the adjacency list of each node,  where graph[u] is an array of nodes that node u is adjacent to.
 Keep a dict called color where nodes are keys and the colors are the numbers 0 or 1. We will always try to given different colors to nbrs through dfs and if we see that there is a loop, G is not bipartite
 ```bash
 color = {}
@@ -319,16 +319,16 @@ for node in range(len(G)):
                 elif color[node] == color[nbr]: return False
 return True
 ```
-# find all possible paths from one node to another in a DAG. Vertices are number 0 to n-1. we are searching 0 -> n-1 all paths
+## find all possible paths from one node to another in a DAG. Vertices are number 0 to n-1. we are searching 0 -> n-1 all paths
 define dfs on a node that goes through all paths and then just call dfs(0)
 ```bash
 def dfs(v):
     if v == n-1: yield [v]
     yield from ([v] + ls for u in graph[v] for ls in dfs(u))
 ```
-# all possible full binary tree == Catalan number
+## all possible full binary tree == Catalan number
 
-# Binary tree pruning: Given the root of a binary tree, return the same tree where every subtree (of the given tree) not containing a 1 has been removed. A subtree of a node node is node plus every node that is a descendant of node.
+## Binary tree pruning: Given the root of a binary tree, return the same tree where every subtree (of the given tree) not containing a 1 has been removed. A subtree of a node node is node plus every node that is a descendant of node.
 ```bash
 left = self.pruneTree(root.left)
 root.left = left
@@ -338,5 +338,5 @@ if (root.val == 0 and root.left == None and root.right == None): return None
 return root
 ```
 
-# UNION FIND : https://leetcode.com/problems/possible-bipartition/ 
+## UNION FIND : https://leetcode.com/problems/possible-bipartition/ 
 The structure is coded here in this example. We will use it in other problems too
