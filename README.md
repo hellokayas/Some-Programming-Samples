@@ -19,13 +19,11 @@ O(V+E)
 Now let us look at general DFS code
 ```bash
 visited = []
-def dfs(v):
-	visited.add(v)
-	# do whatever reqd with v
-	for nbr in graph[v];
-		if nbr not in visited:
-			dfs(nbr)
-
+def dfs(start):
+    visited.add(start)
+    for nbr in graph[start]:
+        if nbr not in visited:
+            dfs(nbr)
 ```
 Now let us look at the level order traversal of a binary tree
 ```bash
@@ -340,3 +338,164 @@ return root
 
 ## UNION FIND : https://leetcode.com/problems/possible-bipartition/ 
 The structure is coded here in this example. We will use it in other problems too
+
+## calculating the left and right height of bin tree for counting the nodes of complete binary tree
+```bash
+def calc_left(node):
+    height = 0
+    while node:
+        height+=1
+        node = node.left
+    return height
+
+left_height = calc_left(root)
+right_height = calc_right(root)
+if (left_height == right_height):
+    return (1<<left_height)-1 #bitwise for 2^height-1
+
+# otherwise, we are at the last level of the tree, we need to recurse the leafs
+
+return 1 + self.countNodes(root.left) + self.countNodes(root.right)
+```
+## Surrounded regions : Given an m x n matrix board containing 'X' and 'O', capture all regions that are 4-directionally surrounded by 'X'. A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+A ‘O’ is not replaced by ‘X’ if it lies in region that ends on a boundary. Traverse the given matrix and replace all ‘O’ with a special character ‘.‘
+Traverse four edges of given matrix and replace(‘.‘, ‘O’) for every ‘.‘ on edges. The remaining ‘.‘ are the characters that indicate ‘O’s (in the original matrix) to be replaced by ‘X’. Traverse the matrix and replace all ‘-‘s with ‘X’s. We will do the whole thing inplace and so use a deque so that we can pull out from the left and push from the right.
+```bash
+queue = collections.deque([])
+for r in range(len(board)):
+    for c in range(len(board[0])):
+        if (r in [0, len(board)-1] or c in [0, len(board[0])-1]) and board[r][c] == "O":
+            queue.append((r, c))
+while queue:
+    r, c = queue.popleft()
+    if 0<=r<len(board) and 0<=c<len(board[0]) and board[r][c] == "O":
+        board[r][c] = "."
+        queue.extend([(r-1, c),(r+1, c),(r, c-1),(r, c+1)])
+
+for r in range(len(board)):
+    for c in range(len(board[0])):
+        if board[r][c] == "O":
+            board[r][c] = "X"
+        elif board[r][c] == ".":
+            board[r][c] = "O"
+```
+
+## The diameter of a tree is the number of edges in the longest path in that tree. There is an undirected tree of n nodes labeled from 0 to n - 1. You are given a 2D array edges where edges.length == n - 1 and edges[i] = [ai, bi]
+
+Create adj list from the edgelist, i.e adj = defaultdict(list). Now start a BFS while keeping track of parents starting from 0. We need to keep track of parent so that we dont travel in the same direction in the tree as we came from. At the end of BFS, say we reach node u. STart andother BFS from u. Keep track of parents here to ensure that we are travelling in a new direction. Now calculate the number of steps we take in new direction till the BFS ends. This is the diameter.
+```bash
+# first BFS
+q = deque()
+q.append((0, -1)) # (vertex, parent)
+while len(q) > 0:
+    u, parent = q.popleft()
+    for v in adj[u]:
+        if v != parent:
+            q.append((v, u))
+
+# second BFS
+d = 0
+q.append((u, -1))
+while len(q) > 0:
+    sz = len(q)
+    for i in range(sz):# every time this loop breaks we have gone another layer of bfs
+        u, parent = q.popleft()
+        for v in adj[u]:
+            if v != parent:
+                q.append((v, u))
+    d += 1
+# minus 1 because the last level is empty
+return d - 1   
+```
+
+## array of strings equations given "xi==yi" or "xi!=yi". Return true if it is possible to assign integers to variable names so as to satisfy all the given equations, or false otherwise.
+
+Create graph = defaultdict(list) and fill it up from the edge list which is the eqn list. edge if there is "=", else no edge. Then define DFS as usual defined above. 
+```bash
+for eqn in equations:
+    visited = set()
+    if eqn[1] == "!":
+        dfs(eqn[0])
+        if eqn[3] in visited:
+            return False
+return True
+```
+
+## For a binary tree T, we can define a flip operation as follows: choose any node, and swap the left and right child subtrees. A binary tree X is flip equivalent to a binary tree Y if and only if we can make X equal to Y after some number of flip operations. Given the roots of two binary trees root1 and root2, return true if the two trees are flip equivalent or false otherwise.
+
+Trivial cases are 
+if root1 == None and root2 == None: return True
+if root1 == None and root2 != None: return False
+if root1 != None and root2 == None: return False
+If the roots match, return (self.flipEquiv(root1.left,root2.left) and self.flipEquiv(root1.right,root2.right)) or (self.flipEquiv(root1.left,root2.right) and self.flipEquiv(root1.right,root2.left))
+
+## In an infinite chess board with coordinates from -infinity to +infinity, you have a knight at square [0, 0]. Return the minimum number of steps needed to move the knight to the square [x, y]. It is guaranteed the answer exists.
+
+Two things to keep in mind here:
+1. knight moves = ((2, 1), (1, 2), (-1, 2), (-2, 1), (-2, -1), (-1, -2), (1, -2), (2, -1))
+2. When we are doing BFS on a grid to find the shortest path, it is good to consider the number of steps as a parameter inside the BFS and pass on to the next call of recursion
+```bash
+q = collections.deque([(0, 0, 0)])
+while q:
+    i,j,steps = q.popleft()
+    if i == x and j == y:
+        return steps + res
+    for di,dj in moves:
+        if (x - i) * di > 0 or (y - j) * dj > 0: # move towards (x, y) at least in one direction
+            q.append((i + di, j + dj, steps + 1))
+```
+Now since it was an infinite chess board we need to do some tricks in order to prevent TLE. No biggie!
+
+## Given the root of a binary tree, find the maximum value v for which there exist different nodes a and b where v = |a.val - b.val| and a is an ancestor of b. A node a is an ancestor of b if either: any child of a is equal to b or any child of a is an ancestor of b.
+
+The idea is that all such a,b pairs will be on some path that connects root to leaf. So get all such root to leaf paths and store all paths in res. We already know how to do this.
+def printRootToLeafPaths(node, path):
+
+    # base case
+    if node is None:
+        return
+
+    # include the current node to the path
+    path.append(node.val)
+
+    # if a leaf node is found, print the path
+    if node.left is None and node.right is None:
+        res.append(list(path))
+
+    # recur for the left and right subtree
+    printRootToLeafPaths(node.left, path)
+    printRootToLeafPaths(node.right, path)
+
+    # backtrack: remove the current node after the left, and right subtree are done
+    path.pop()
+    return res
+Then just do the following:
+
+ans = [max(i)-min(i) for i in res]
+return max(ans)
+
+## You are given an integer n, which indicates that there are n courses labeled from 1 to n. You are also given an array relations where relations[i] = [prevCoursei, nextCoursei], representing a prerequisite relationship between course prevCoursei and course nextCoursei: course prevCoursei has to be taken before course nextCoursei. In one semester, you can take any number of courses as long as you have taken all the prerequisites in the previous semester for the courses you are taking. Return the minimum number of semesters needed to take all courses. If there is no way to take all the courses, return -1
+
+Set up the graph for the topological sort and then set up the queue as reqd. Then do top sort but keep track of two parameters count = 0, visitedcount = 0
+```bash
+while q:
+    count += 1
+    nexq = []
+    for node in q:
+        visitedcount += 1
+        endnodes = graph[node]
+        for endnode in endnodes:
+            indegree[endnode] -= 1
+            if indegree[endnode] == 0: # all prereq learnt
+                nexq.append(endnode)
+    q = nexq
+    return count if visitedcount == n else -1
+```
+
+https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+https://leetcode.com/problems/path-with-minimum-effort/
+https://leetcode.com/problems/diameter-of-n-ary-tree/
+https://leetcode.com/problems/path-with-maximum-minimum-value/
+https://leetcode.com/problems/delete-nodes-and-return-forest/
+https://leetcode.com/problems/shortest-path-in-binary-matrix/
