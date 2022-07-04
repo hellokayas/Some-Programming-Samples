@@ -339,6 +339,12 @@ return root
 ## UNION FIND : https://leetcode.com/problems/possible-bipartition/ 
 The structure is coded here in this example. We will use it in other problems too
 
+
+
+
+
+
+
 ## calculating the left and right height of bin tree for counting the nodes of complete binary tree
 ```bash
 def calc_left(node):
@@ -493,9 +499,110 @@ while q:
     return count if visitedcount == n else -1
 ```
 
-https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
-https://leetcode.com/problems/path-with-minimum-effort/
-https://leetcode.com/problems/diameter-of-n-ary-tree/
-https://leetcode.com/problems/path-with-maximum-minimum-value/
-https://leetcode.com/problems/delete-nodes-and-return-forest/
-https://leetcode.com/problems/shortest-path-in-binary-matrix/
+## Given a root of an N-ary tree, you need to compute the length of the diameter of the tree. The diameter of an N-ary tree is the length of the longest path between any two nodes in the tree. This path may or may not pass through the root.
+
+This is very hard. Look at various solutions. This is tricky and need to be memorized. https://leetcode.com/problems/diameter-of-n-ary-tree/solution/
+
+## Given an n x n binary matrix grid, return the length of the shortest clear path in the matrix. If there is no clear path, return -1. A clear path in a binary matrix is a path from the top-left cell (i.e., (0, 0)) to the bottom-right cell (i.e., (n - 1, n - 1)) such that: All the visited cells of the path are 0. All the adjacent cells of the path are 8-directionally connected (i.e., they are different and they share an edge or a corner). The length of a clear path is the number of visited cells of this path.
+
+directions = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+Define what a nbr of a (row,col) look like by giving a func called getnbr.
+```bash
+ def get_neighbours(row, col):
+    for row_difference, col_difference in directions:
+        new_row = row + row_difference
+        new_col = col + col_difference
+        if not(0 <= new_row <= max_row and 0 <= new_col <= max_col):
+            continue
+        if grid[new_row][new_col] != 0:
+            continue
+        yield (new_row, new_col)
+```
+Now we just run a bfs to find the path. Store the distance covered this far inside the grid at that cell where we are right now.
+```bash
+while queue:
+    row, col = queue.popleft() # this means we ar using a deque
+    distance = grid[row][col]
+    if (row, col) == (max_row, max_col):
+        return distance
+    for neighbour_row, neighbour_col in get_neighbours(row, col):
+        grid[neighbour_row][neighbour_col] = distance + 1
+        queue.append((neighbour_row, neighbour_col))
+
+# There was no path.
+return -1
+```
+
+## You are a hiker preparing for an upcoming hike. You are given heights, a 2D array of size rows x columns, where heights[row][col] represents the height of cell (row, col). You are situated in the top-left cell, (0, 0), and you hope to travel to the bottom-right cell, (rows-1, columns-1) (i.e., 0-indexed). You can move up, down, left, or right, and you wish to find a route that requires the minimum effort. A route's effort is the maximum absolute difference in heights between two consecutive cells of the route. Return the minimum effort required to travel from the top-left cell to the bottom-right cell.
+
+We will do binary search on possible range of values. Calculate f(mid) and move to the left or right suitably. We need to design f here.
+
+```bash
+def f(mid):
+    visited = [[False]*col for _ in range(row)]
+    queue = [(0, 0)]  # x, y
+    while queue:
+        x, y = queue.pop(0)
+        if x == row-1 and y == col-1:
+            return True
+        #visited[x][y] = True
+        for dx, dy in [[0, 1], [1, 0], [0, -1], [-1, 0]]:
+            adjacent_x = x + dx
+            adjacent_y = y + dy
+            if 0 <= adjacent_x < row and 0 <= adjacent_y < col and not visited[adjacent_x][adjacent_y]:
+                current_difference = abs(heights[adjacent_x][adjacent_y]-heights[x][y])
+                if current_difference <= mid:
+                    visited[adjacent_x][adjacent_y] = True
+                    queue.append((adjacent_x, adjacent_y))
+```
+
+## Given an m x n integer matrix grid, return the maximum score of a path starting at (0, 0) and ending at (m - 1, n - 1) moving in the 4 cardinal directions. The score of a path is the minimum value in that path.
+
+this will be similar to the prev problem, we have done dfs which outputs T/F based on whether we can reach the last cell starting from i,j with min val in any path as mid. Here f(mid) = dfs(i,j,mid,grid[-1][-1]) Then normal bin search
+while start < end:
+    mid = (start + end) // 2
+    visited = [[False] * n for _ in range(m)]
+    if dfs(0, 0, mid, visited):
+        start = mid + 1 # current is working, move to one step right
+    else:
+        end = mid
+        
+return end - 1 # or start - 1
+
+```bash
+def dfs(i, j, mini, visited):
+    if i == m - 1 and j == n - 1:
+        return True
+    visited[i][j] = True
+    for dx, dy in directions:
+        nx, ny = i + dx, j + dy
+        if 0 <= nx < m and 0 <= ny < n and not visited[nx][ny]:
+            if grid[nx][ny] >= mini:
+                if dfs(nx, ny, mini, visited): return True
+    return False
+```
+
+## Given the root of a binary tree, each node in the tree has a distinct value. After deleting all nodes with a value in to_delete, we are left with a forest (a disjoint union of trees). Return the roots of the trees in the remaining forest. You may return the result in any order.
+
+Just recursively call the func so that it deletes the nodes to be deleted and then just call this function on the root. BUt handle the case where root is not to be deleted.
+
+```bash
+def helper(node):
+    if not node:
+        return None
+    node.left = helper(node.left)
+    node.right = helper(node.right)
+    
+    # add children of a node that is to be deleted
+    if node.val in to_delete:
+        if node.left: 
+            ans.append(node.left)
+        if node.right:
+            ans.append(node.right)
+        return None
+    return node
+```
+Now call helper on root. but root might not be something to be deleted, so just add this to the result.
+
+## https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
+f**king tricky look at the solution, no concept, just manipulate in a tricky way
