@@ -298,7 +298,6 @@ def dfs(r,c):
     seen.add((r,c))
     return (dfs(r,c+1) + dfs(r,c-1) + dfs(r-1,c) + dfs(r+1,c) + 1)
 ```
-## one of the hardest problems, will come back later: https://leetcode.com/problems/number-of-distinct-islands/
 
 ## check if a graph is bipartite given the adjacency list of each node,  where graph[u] is an array of nodes that node u is adjacent to.
 Keep a dict called color where nodes are keys and the colors are the numbers 0 or 1. We will always try to given different colors to nbrs through dfs and if we see that there is a loop, G is not bipartite
@@ -339,11 +338,51 @@ return root
 ## UNION FIND : https://leetcode.com/problems/possible-bipartition/ 
 The structure is coded here in this example. We will use it in other problems too
 
+Memorize this by heart like learning a poem
+```bash
+class UnionFind:
+    
+    def __init__(self,n):
+        self.parent = [i for i in range(n+1)]
+        self.rank = [1 for i in range(n+1)]
+        
+    def find(self,x):
+        p = self.parent[x]
+        change = []
+        while p!= self.parent[p]:
+            change.append(p)
+            p = self.parent[p]
+        for node in change:
+            self.parent[node] = p    
+        return p
+    
+    def union(self,x,y):
+        p_x = self.find(x)
+        p_y = self.find(y)
+        
+        if p_x == p_y:
+            return False
+        if self.rank[p_x] > self.rank[p_y]:
+            self.rank[p_x] += self.rank[p_y]
+            self.parent[p_y] = p_x
+        else:
+            self.rank[p_y] += self.rank[p_x]
+            self.parent[p_x] = p_y
+        return True
+```
+## Now consider the problem: We want to split a group of n people (labeled from 1 to n) into two groups of any size. Each person may dislike some other people, and they should not go into the same group. Given the integer n and the array dislikes where dislikes[i] = [ai, bi] indicates that the person labeled ai does not like the person labeled bi, return true if it is possible to split everyone into two groups in this way.
 
-
-
-
-
+uf = UnionFind(n) data structure is created and then a dislike graph d is created by using the dislikes as an edgelist.
+```bash
+for x in range(1,n+1):
+    if d[x]:
+        leader = d[x][0]
+        for nbr in d[x]:
+            if uf.find(nbr) == uf.find(x):
+                return False
+            uf.union(nbr,leader)
+return True
+```
 
 ## calculating the left and right height of bin tree for counting the nodes of complete binary tree
 ```bash
@@ -604,5 +643,9 @@ def helper(node):
 ```
 Now call helper on root. but root might not be something to be deleted, so just add this to the result.
 
-## https://leetcode.com/problems/populating-next-right-pointers-in-each-node/
-f**king tricky look at the solution, no concept, just manipulate in a tricky way
+## https://leetcode.com/problems/populating-next-right-pointers-in-each-node/ 
+no concept, just manipulate in a tricky way
+
+## one of the hardest problems : ou are given an m x n binary matrix grid. An island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water. An island is considered to be the same as another if and only if one island can be translated (and not rotated or reflected) to equal the other. Return the number of distinct islands. 
+
+The official solution is the best explanation here. read app1 for intuition followed by app3 for the optimal soln which is hashing by path signature. The code is clear. We do a DFS that stores the path sign while traversing the arr. Then the same idea of calling dfs and getting the number of connected components which is the num of islands but two islands can have same path sign and hence will counted only once.
